@@ -6,6 +6,8 @@ import {
   Scripts,
   ScrollRestoration,
 } from 'react-router';
+import { ToastContainer } from 'react-toastify';
+import toastStyles from 'react-toastify/ReactToastify.css?url';
 
 import stylesheet from './app.css?url';
 
@@ -20,6 +22,7 @@ export const links = () => [
     rel: 'stylesheet',
     href: 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap',
   },
+  { rel: 'stylesheet', href: toastStyles },
   { rel: 'stylesheet', href: stylesheet },
 ];
 
@@ -36,6 +39,7 @@ export function Layout({ children }) {
         {children}
         <ScrollRestoration />
         <Scripts />
+        <ToastContainer />
       </body>
     </html>
   );

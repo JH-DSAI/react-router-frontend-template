@@ -1,11 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Form, useLoaderData } from 'react-router';
+import { toast as notify } from 'react-toastify';
+import { dataWithError, dataWithSuccess, getToast } from 'remix-toast';
 
 // Loader function to fetch data
-export async function loader() {
+export async function loader({ request }) {
+  const { toast, headers } = await getToast(request);
   // Example data that would normally come from a database or API
   const welcomeMessage = 'Welcome 🐁';
   return {
+    toast,
+    headers,
     welcomeMessage,
   };
 }
@@ -17,11 +22,12 @@ export async function action({ request }) {
 
   // Example validation
   if (!feedback || feedback.length < 5) {
-    return { error: 'Feedback must be at least 5 characters long', status: 400 };
+    return dataWithError({}, 'Feedback must be at least 5 characters long');
   }
 
   // In a real app, you would save this to a database
   console.log('Received feedback:', feedback);
+  return dataWithSuccess({}, 'Feedback received! Thanks for your input!');
 }
 
 export function meta() {
@@ -33,7 +39,12 @@ export function meta() {
 
 export default function Home() {
   // Use the data from the loader
-  const { welcomeMessage } = useLoaderData();
+  const { welcomeMessage, toast } = useLoaderData<typeof loader>();
+  useEffect(() => {
+    if (toast) {
+      notify(toast.message, { type: toast.type });
+    }
+  }, [toast]);
 
   return (
     <div className="min-h-screen bg-base-100">
