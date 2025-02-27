@@ -1,19 +1,7 @@
 import React, { useEffect } from 'react';
-import { Form, useLoaderData } from 'react-router';
+import { data, Form, useLoaderData } from 'react-router';
 import { toast as notify } from 'react-toastify';
 import { dataWithError, dataWithSuccess, getToast } from 'remix-toast';
-
-// Loader function to fetch data
-export async function loader({ request }) {
-  const { toast, headers } = await getToast(request);
-  // Example data that would normally come from a database or API
-  const welcomeMessage = 'Welcome 🐁';
-  return {
-    toast,
-    headers,
-    welcomeMessage,
-  };
-}
 
 // Action function to handle form submissions
 export async function action({ request }) {
@@ -22,24 +10,37 @@ export async function action({ request }) {
 
   // Example validation
   if (!feedback || feedback.length < 5) {
-    return dataWithError({}, 'Feedback must be at least 5 characters long');
+    return dataWithError(null, 'Feedback must be at least 5 characters long');
   }
-
-  // In a real app, you would save this to a database
-  console.log('Received feedback:', feedback);
-  return dataWithSuccess({}, 'Feedback received! Thanks for your input!');
+  // do something with the feedback like save it to a db, or send it to an API.
+  return dataWithSuccess({ result: 'Data saved successfully' }, 'Thanks for the feedback');
+}
+// Loader function to fetch data
+export async function loader({ request }) {
+  const { toast, headers } = await getToast(request);
+  // Example data that would normally come from a database or API
+  const welcomeMessage = 'Welcome 🐁';
+  return data(
+    {
+      toast,
+      welcomeMessage,
+    },
+    { headers },
+  );
 }
 
 export function meta() {
   return [
-    { title: 'New React Router App' },
-    { name: 'description', content: 'Welcome to React Router!' },
+    { title: 'dsai front end stack template' },
+    { name: 'description', content: 'jhu dsai front end stack template' },
   ];
 }
 
 export default function Home() {
   // Use the data from the loader
   const { welcomeMessage, toast } = useLoaderData<typeof loader>();
+
+  // Show a toast notification if there is one, this depends on the ToastContainer being in the dom hierarchy
   useEffect(() => {
     if (toast) {
       notify(toast.message, { type: toast.type });
@@ -53,7 +54,7 @@ export default function Home() {
           <div className="max-w-md">
             <h1 className="text-5xl font-bold text-primary mb-4">JHU DSAI Frontend Template</h1>
             <div className="flex flex-col gap-4">
-              <div>{welcomeMessage}</div>
+              <div className="font-mono">{welcomeMessage}</div>
               <a
                 href="https://reactrouter.com"
                 target="_blank"
@@ -96,7 +97,7 @@ export default function Home() {
               </a>
             </div>
 
-            <div className="divider">Send us feedback</div>
+            <div className="divider font-mono">Send us feedback</div>
 
             <Form method="post" className="form-control">
               <textarea
@@ -104,7 +105,7 @@ export default function Home() {
                 className="textarea textarea-bordered"
                 placeholder="Tell us what you think"
               ></textarea>
-              <button type="submit" className="btn btn-secondary mt-2">
+              <button type="submit" className="btn btn-secondary mt-4">
                 Submit Feedback
               </button>
             </Form>
