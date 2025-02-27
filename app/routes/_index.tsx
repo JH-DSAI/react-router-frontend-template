@@ -51,9 +51,7 @@ export default function Home() {
       <div className="hero py-8">
         <div className="hero-content text-center">
           <div className="max-w-md">
-            <h1 className="text-5xl font-bold text-primary mb-4">
-              JHU DSAI Frontend Template Stack
-            </h1>
+            <h1 className="text-5xl font-bold text-primary mb-4">JHU DSAI Frontend Template</h1>
             <div className="flex flex-col gap-4">
               <div>{welcomeMessage}</div>
               <a
